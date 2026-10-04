@@ -1,0 +1,32 @@
+name: Lab 1 - Basics and Bugs
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Run without making changes'
+        type: boolean
+        default: false
+      message:
+        description: 'Message to print'
+        type: string
+        default: 'Hello Actions'
+
+jobs:
+  explore-inputs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      # BUG 1: Using the old github.event.inputs context
+      - name: Boolean string bug
+        if: github.event.inputs.dry_run
+        run: echo "Dry run is ON! (Wait, I unchecked the box?)"
+
+      # BUG 2: Unquoted inline expression
+      - name: Unquoted input bug
+        run: |
+          echo The message is: ${{ inputs.message }}
